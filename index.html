@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스마트 렘 (S-REM) - 슬기로운 수면·스트레스 케어 🌙✨</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Cute & Friendly Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js for visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        skyTheme: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                            950: '#082f49'
+                        }
+                    },
+                    fontFamily: {
+                        jua: ['Jua', 'sans-serif'],
+                        sans: ['Gowun Dodum', 'sans-serif'],
+                        outfit: ['Outfit', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Gowun Dodum', sans-serif;
+            background-color: #F4F9FF;
+            background-image: radial-gradient(#D0E8FF 1.5px, transparent 1.5px), radial-gradient(#D0E8FF 1.5px, #F4F9FF 1.5px);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            color: #2D3748;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        .dark body {
+            background-color: #0F172A;
+            background-image: radial-gradient(#1E293B 1.5px, transparent 1.5px), radial-gradient(#1E293B 1.5px, #0F172A 1.5px);
+            color: #F1F5F9;
+        }
+
+        /* Floating Animation */
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(2deg); }
+        }
+        .cute-float {
+            animation: gentleFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes pulseSoft {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+        }
+        .cute-pulse {
+            animation: pulseSoft 3s ease-in-out infinite;
+        }
+
+        /* Night Mode Overlay */
+        .bluelight-filter {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(255, 180, 50, 0.12);
+            pointer-events: none;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #E0F2FE;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #7DD3FC;
+            border-radius: 20px;
+        }
+
+        /* Breathing Circle Animation */
+        @keyframes breatheCute {
+            0% { transform: scale(0.85); box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
+            50% { transform: scale(1.25); box-shadow: 0 0 35px rgba(56, 189, 248, 0.8); }
+            100% { transform: scale(0.85); box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
+        }
+        .breathing-circle-cute {
+            animation: breatheCute 8s infinite ease-in-out;
+        }
+
+        .cute-card {
+            background: #FFFFFF;
+            border: 2.5px solid #E0F2FE;
+            box-shadow: 0 8px 20px -6px rgba(56, 189, 248, 0.2);
+            border-radius: 1.75rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .cute-card:hover {
+            box-shadow: 0 12px 28px -6px rgba(56, 189, 248, 0.35);
+        }
+
+        .dark .cute-card {
+            background: #1E293B;
+            border-color: #334155;
+            box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.4);
+        }
+
+        .cute-btn {
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.35);
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .cute-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 16px rgba(56, 189, 248, 0.5);
+        }
+        .cute-btn:active {
+            transform: translateY(1px) scale(0.98);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-sky-200">
+
+    <!-- Blue Light Filter Overlay -->
+    <div id="blueLightOverlay" class="bluelight-filter opacity-0"></div>
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-40 bg-white/90 dark:bg-[#0F172A]/90 backdrop-blur-md border-b-2 border-sky-100 dark:border-sky-950/40 transition-colors">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            
+            <!-- App Brand & Title -->
+            <div class="flex items-center space-x-3">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-300 via-sky-200 to-teal-200 dark:from-sky-800 dark:to-cyan-900 flex items-center justify-center shadow-sm cute-float overflow-hidden p-1 border-2 border-white dark:border-slate-700">
+                    <!-- Hangyodon Avatar SVG -->
+                    <svg viewBox="0 0 100 100" class="w-full h-full">
+                        <path d="M50 5 C56 16 54 22 50 22 C46 22 44 16 50 5 Z" fill="#38BDF8" stroke="#0284C7" stroke-width="3"/>
+                        <path d="M50 18 C30 18 22 38 22 62 C22 78 32 88 50 88 C68 88 78 78 78 62 C78 38 70 18 50 18 Z" fill="#67E8F9" stroke="#0284C7" stroke-width="4"/>
+                        <circle cx="38" cy="46" r="11" fill="#FFF" stroke="#0284C7" stroke-width="3.5"/>
+                        <circle cx="62" cy="46" r="11" fill="#FFF" stroke="#0284C7" stroke-width="3.5"/>
+                        <circle cx="38" cy="46" r="3.5" fill="#0284C7"/>
+                        <circle cx="62" cy="46" r="3.5" fill="#0284C7"/>
+                        <ellipse cx="50" cy="68" rx="14" ry="9" fill="#F472B6" stroke="#0284C7" stroke-width="3"/>
+                        <line x1="36" y1="68" x2="64" y2="68" stroke="#0284C7" stroke-width="2.5"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="font-jua text-2xl text-sky-600 dark:text-sky-300 tracking-wide">S-REM</span>
+                        <span class="text-xs bg-sky-100 dark:bg-sky-950/80 text-sky-700 dark:text-sky-300 font-bold px-2.5 py-0.5 rounded-full border border-sky-200 dark:border-sky-800 flex items-center gap-1">
+                            <span>🎀</span> 캐릭터 케어
+                        </span>
+                    </div>
+                    <p class="text-[11px] text-sky-500 dark:text-sky-300/70 font-bold hidden sm:block">귀여운 친구들과 함께하는 슬기로운 수면·스트레스 케어 ☁️</p>
+                </div>
+            </div>
+
+            <!-- Role Switcher & Mode Toggles -->
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                
+                <!-- User Guide (사용설명서) Button -->
+                <button onclick="openModal('guideModal')" title="사용 설명서 보기" class="px-3 py-1.5 rounded-2xl bg-sky-100 dark:bg-slate-800 text-sky-800 dark:text-sky-300 hover:scale-105 transition border border-sky-200 dark:border-slate-700 text-xs font-bold flex items-center gap-1">
+                    <span>📖 사용설명서</span>
+                </button>
+
+                <!-- Role Selector (Student vs Teacher) -->
+                <div class="bg-sky-50 dark:bg-slate-800 p-1 rounded-2xl border border-sky-100 dark:border-slate-700 flex text-xs font-bold">
+                    <button id="roleStudentBtn" onclick="setRole('student')" class="px-3.5 py-1.5 rounded-xl transition-all shadow-xs bg-sky-500 text-white dark:bg-sky-600">
+                        🎓 학생 모드
+                    </button>
+                    <button id="roleTeacherBtn" onclick="requestTeacherAccess()" class="px-3.5 py-1.5 rounded-xl transition-all text-sky-700 dark:text-sky-300 hover:bg-sky-100/50">
+                        🩺 보건교사 관제센터
+                    </button>
+                </div>
+
+                <!-- Night Mode / Eye-Care Filter Button -->
+                <button onclick="toggleEyeCare()" id="eyeCareBtn" title="야간 눈보호 꿀잠 모드" class="p-2.5 rounded-2xl bg-amber-100 dark:bg-slate-800 text-amber-800 dark:text-amber-300 hover:scale-105 transition border border-amber-200/60">
+                    <i class="fa-solid fa-eye text-sm"></i>
+                </button>
+
+                <!-- Dark Mode Toggle -->
+                <button onclick="toggleTheme()" id="darkToggleBtn" title="다크 테마 전환" class="p-2.5 rounded-2xl bg-indigo-100 dark:bg-slate-800 text-indigo-800 dark:text-indigo-300 hover:scale-105 transition border border-indigo-200/60">
+                    <i class="fa-solid fa-moon text-sm dark:hidden"></i>
+                    <i class="fa-solid fa-sun text-sm hidden dark:inline text-amber-400"></i>
+                </button>
+
+                <!-- Privacy Security Badge -->
+                <button onclick="openModal('privacyModal')" class="hidden md:flex items-center space-x-1.5 text-xs font-bold text-teal-800 dark:text-teal-300 bg-teal-50 dark:bg-teal-950/60 px-3 py-1.5 rounded-2xl border border-teal-200 dark:border-teal-800 hover:scale-105 transition">
+                    <span>🛡️ 안심 보호구역</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Body Container -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 py-6 w-full flex-grow">
+
+        <!-- STUDENT VIEW -->
+        <div id="studentView" class="space-y-6">
+
+            <!-- Banner: Disclaimer & Emergency Call with Hangyodon Floating -->
+            <div class="bg-gradient-to-r from-sky-100 via-cyan-50 to-teal-100 dark:from-slate-900 dark:via-sky-950/40 dark:to-slate-900 border-2 border-sky-200/90 dark:border-sky-900/60 rounded-3xl p-4 sm:p-5 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-3 relative overflow-hidden">
+                <div class="flex items-start space-x-3.5 z-10">
+                    <!-- Hangyodon Sticker Header -->
+                    <div class="w-14 h-14 bg-white dark:bg-slate-800 rounded-2xl p-1 shadow-md cute-pulse shrink-0 border-2 border-sky-200">
+                        <svg viewBox="0 0 100 100" class="w-full h-full">
+                            <path d="M50 8 C55 18 53 23 50 23 C47 23 45 18 50 8 Z" fill="#38BDF8" stroke="#0284C7" stroke-width="3"/>
+                            <path d="M50 20 C32 20 24 38 24 62 C24 78 33 88 50 88 C67 88 76 78 76 62 C76 38 68 20 50 20 Z" fill="#67E8F9" stroke="#0284C7" stroke-width="4"/>
+                            <circle cx="39" cy="46" r="10" fill="#FFF" stroke="#0284C7" stroke-width="3"/>
+                            <circle cx="61" cy="46" r="10" fill="#FFF" stroke="#0284C7" stroke-width="3"/>
+                            <circle cx="39" cy="46" r="3" fill="#0284C7"/>
+                            <circle cx="61" cy="46" r="3" fill="#0284C7"/>
+                            <ellipse cx="50" cy="68" rx="13" ry="8" fill="#F472B6" stroke="#0284C7" stroke-width="3"/>
+                            <line x1="37" y1="68" x2="63" y2="68" stroke="#0284C7" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-sm sm:text-base font-jua text-sky-900 dark:text-sky-200 flex items-center gap-2">
+                            한교동이 응원해! 오늘 하루도 고생 많았어 💕
+                            <span class="text-[11px] font-sans font-bold px-2.5 py-0.5 bg-sky-200 text-sky-800 dark:bg-sky-900 dark:text-sky-200 rounded-full">100% 비밀보장🔒</span>
+                        </h2>
+                        <p class="text-xs text-sky-800/80 dark:text-slate-300 mt-1 font-medium">
+                            귀여운 친구들과 수면 리듬을 지키고 스트레스를 싹 날려보자! 힘들 땐 보건실을 언제든 찾아와 줘 💧
+                        </p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 self-end md:self-center shrink-0 z-10">
+                    <button onclick="openModal('guideModal')" class="text-xs font-bold text-sky-800 dark:text-sky-300 bg-white dark:bg-slate-800 hover:bg-sky-50 px-3 py-2 rounded-2xl border-2 border-sky-300 dark:border-sky-800 transition flex items-center gap-1 cute-btn">
+                        <span>📖 처음이신가요? 설명서 보기</span>
+                    </button>
+                    <button onclick="openModal('emergencyModal')" class="text-xs font-bold text-cyan-800 dark:text-cyan-300 bg-white dark:bg-slate-800 hover:bg-cyan-50 px-3 py-2 rounded-2xl border-2 border-cyan-300 dark:border-cyan-800 transition flex items-center gap-1 cute-btn">
+                        <span>🆘 위기상담 1388</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- SECTION 1: 3-Second Quick Logger with PomPomPurin -->
+            <section class="cute-card p-5 md:p-6 relative overflow-hidden">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-2">
+                        <!-- Pompompurin Mini Icon -->
+                        <div class="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/60 flex items-center justify-center border-2 border-amber-300 shadow-xs overflow-hidden">
+                            <svg viewBox="0 0 100 100" class="w-full h-full">
+                                <path d="M35 15 C35 8 65 8 65 15 L65 22 L35 22 Z" fill="#78350F"/>
+                                <circle cx="50" cy="8" r="4" fill="#78350F"/>
+                                <path d="M22 50 C22 30 35 24 50 24 C65 24 78 30 78 50 C78 75 68 85 50 85 C32 85 22 75 22 50 Z" fill="#FEF08A" stroke="#78350F" stroke-width="4"/>
+                                <path d="M16 38 C5 42 6 56 18 52 Z" fill="#FEF08A" stroke="#78350F" stroke-width="3"/>
+                                <path d="M84 38 C95 42 94 56 82 52 Z" fill="#FEF08A" stroke="#78350F" stroke-width="3"/>
+                                <circle cx="38" cy="46" r="3.5" fill="#78350F"/>
+                                <circle cx="62" cy="46" r="3.5" fill="#78350F"/>
+                                <path d="M46 54 Q50 58 54 54 Q50 62 46 54 Z" fill="#78350F"/>
+                            </svg>
+                        </div>
+                        <span class="px-3 py-1 bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 rounded-2xl text-xs font-bold border border-amber-200">
+                            🍮 폼폼푸린의 3초 뚝딱 기록
+                        </span>
+                        <h3 class="font-jua text-lg md:text-xl text-sky-950 dark:text-sky-100">오늘의 수면 & 컨디션 체크 ☁️</h3>
+                    </div>
+                    <span class="text-xs font-bold text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-slate-800 px-3 py-1 rounded-xl border border-sky-100" id="currentTodayDate">2026.10.28 (수) 🌿</span>
+                </div>
+
+                <form id="quickLogForm" onsubmit="handleLogSubmit(event)" class="space-y-5">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        
+                        <!-- Sleep Time Slider -->
+                        <div class="bg-cyan-50/70 dark:bg-slate-900/60 p-4 rounded-2xl border-2 border-cyan-100 dark:border-slate-800">
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2 flex justify-between">
+                                <span>💤 어제 얼마나 잤어?</span>
+                                <span id="sleepHoursVal" class="text-sky-700 dark:text-sky-400 font-jua text-base">5.5 시간</span>
+                            </label>
+                            <input type="range" id="sleepHoursInput" min="2" max="12" step="0.5" value="5.5" oninput="updateSleepVal(this.value)"
+                                   class="w-full accent-sky-500 bg-sky-200 dark:bg-slate-700 h-2.5 rounded-lg cursor-pointer">
+                            <div class="flex justify-between text-[11px] text-slate-500 font-bold mt-1.5">
+                                <span>2시간 😭</span>
+                                <span>적정 (7~8h) 😴</span>
+                                <span>12시간 푹~ 푹!</span>
+                            </div>
+                        </div>
+
+                        <!-- Mood Emoji Picker -->
+                        <div class="bg-sky-50/60 dark:bg-slate-900/60 p-4 rounded-2xl border-2 border-sky-100 dark:border-slate-800">
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">
+                                😊 지금 내 기분 상태는?
+                            </label>
+                            <div class="grid grid-cols-5 gap-1.5 text-center">
+                                <button type="button" onclick="selectMood('best', this)" class="mood-btn p-2 rounded-2xl hover:bg-sky-200/60 dark:hover:bg-slate-800 transition text-2xl border-2 border-transparent">😃</button>
+                                <button type="button" onclick="selectMood('good', this)" class="mood-btn p-2 rounded-2xl hover:bg-sky-200/60 dark:hover:bg-slate-800 transition text-2xl border-2 border-transparent">🙂</button>
+                                <button type="button" onclick="selectMood('tired', this)" class="mood-btn p-2 rounded-2xl hover:bg-sky-200/60 dark:hover:bg-slate-800 transition text-2xl border-2 border-sky-400 bg-sky-100 dark:bg-slate-800">🥱</button>
+                                <button type="button" onclick="selectMood('stressed', this)" class="mood-btn p-2 rounded-2xl hover:bg-sky-200/60 dark:hover:bg-slate-800 transition text-2xl border-2 border-transparent">🤯</button>
+                                <button type="button" onclick="selectMood('sick', this)" class="mood-btn p-2 rounded-2xl hover:bg-sky-200/60 dark:hover:bg-slate-800 transition text-2xl border-2 border-transparent">🤒</button>
+                            </div>
+                        </div>
+
+                        <!-- Symptoms Tag selection -->
+                        <div class="bg-indigo-50/60 dark:bg-slate-900/60 p-4 rounded-2xl border-2 border-indigo-100 dark:border-slate-800">
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">
+                                💊 신체 불편 증상 (콕 찍어 선택!)
+                            </label>
+                            <div class="flex flex-wrap gap-1.5">
+                                <button type="button" onclick="toggleSymptom('두통', this)" class="symptom-btn text-xs font-bold px-2.5 py-1 rounded-xl border border-indigo-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-sky-100 transition">#두통 🤕</button>
+                                <button type="button" onclick="toggleSymptom('어지럼증', this)" class="symptom-btn text-xs font-bold px-2.5 py-1 rounded-xl border border-indigo-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-sky-100 transition">#어지럼 💫</button>
+                                <button type="button" onclick="toggleSymptom('눈 피로', this)" class="symptom-btn text-xs font-bold px-2.5 py-1 rounded-xl border border-indigo-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-sky-100 transition">#눈피로 👀</button>
+                                <button type="button" onclick="toggleSymptom('집중력 저하', this)" class="symptom-btn text-xs font-bold px-2.5 py-1 rounded-xl border border-indigo-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-sky-100 transition">#멍~해요 🌀</button>
+                                <button type="button" onclick="toggleSymptom('소화불량', this)" class="symptom-btn text-xs font-bold px-2.5 py-1 rounded-xl border border-indigo-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-sky-100 transition">#속아픔 🤢</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
+                        <div class="text-xs font-bold text-teal-700 dark:text-teal-400 flex items-center">
+                            <span class="mr-1">🛡️</span> 작성한 내용물은 내 기기 안에서만 안전하게 암호화 보관돼요!
+                        </div>
+                        <button type="submit" class="w-full sm:w-auto px-6 py-2.5 bg-sky-500 hover:bg-sky-600 text-white font-jua text-base rounded-2xl cute-btn transition flex items-center justify-center gap-1.5">
+                            <span>✨ 기록 완료하기</span>
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- SECTION 2: AI Health & Stress Diagnostic Report -->
+            <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Chart Area (2 Cols) -->
+                <div class="lg:col-span-2 cute-card p-5 md:p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h3 class="font-jua text-lg md:text-xl text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+                                📊 주간 수면 & 스트레스 그래프
+                            </h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 font-bold">최근 7일 동안의 나의 수면 리듬 변화</p>
+                        </div>
+                        <div class="flex items-center space-x-2 text-xs font-bold">
+                            <span class="inline-flex items-center text-sky-600 dark:text-sky-300">
+                                <span class="w-2.5 h-2.5 rounded-full bg-sky-400 inline-block mr-1"></span> 수면시간(h)
+                            </span>
+                            <span class="inline-flex items-center text-teal-600 dark:text-teal-400">
+                                <span class="w-2.5 h-2.5 rounded-full bg-teal-400 inline-block mr-1"></span> 스트레스
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="relative h-64 w-full">
+                        <canvas id="weeklyChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- AI Analysis Card with Momonga -->
+                <div class="bg-gradient-to-b from-sky-100/90 via-cyan-50 to-teal-50 dark:from-slate-900 dark:to-slate-900 border-2 border-sky-200 dark:border-slate-800 rounded-3xl p-5 md:p-6 shadow-sm flex flex-col justify-between relative overflow-hidden">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center space-x-2">
+                                <!-- Momonga Character Avatar -->
+                                <div class="w-10 h-10 rounded-2xl bg-white dark:bg-slate-800 p-1 border-2 border-cyan-300 flex items-center justify-center shadow-xs cute-float">
+                                    <svg viewBox="0 0 100 100" class="w-full h-full">
+                                        <path d="M15 35 C10 15 35 15 40 30 Z" fill="#E0F2FE" stroke="#0284C7" stroke-width="3"/>
+                                        <path d="M85 35 C90 15 65 15 60 30 Z" fill="#E0F2FE" stroke="#0284C7" stroke-width="3"/>
+                                        <circle cx="50" cy="55" r="35" fill="#FFF" stroke="#0284C7" stroke-width="4"/>
+                                        <circle cx="32" cy="62" r="6" fill="#F472B6" opacity="0.7"/>
+                                        <circle cx="68" cy="62" r="6" fill="#F472B6" opacity="0.7"/>
+                                        <ellipse cx="36" cy="50" rx="6" ry="9" fill="#0284C7"/>
+                                        <ellipse cx="64" cy="50" rx="6" ry="9" fill="#0284C7"/>
+                                        <circle cx="34" cy="47" r="2.5" fill="#FFF"/>
+                                        <circle cx="62" cy="47" r="2.5" fill="#FFF"/>
+                                        <path d="M46 60 Q50 64 54 60" fill="none" stroke="#0284C7" stroke-width="3" stroke-linecap="round"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="font-jua text-base text-sky-950 dark:text-sky-100">모몬가의 닥터 힐링 리포트</h4>
+                                    <p class="text-[10px] text-cyan-700 font-bold">"나만 봐! 칭찬해 줄게!" ✨</p>
+                                </div>
+                            </div>
+                            <span class="text-[10px] px-2.5 py-0.5 bg-sky-200 dark:bg-sky-900 text-sky-900 dark:text-sky-200 rounded-full font-bold">실시간 분석✨</span>
+                        </div>
+
+                        <!-- Status Score Pill -->
+                        <div class="bg-white/90 dark:bg-slate-800 p-3.5 rounded-2xl border border-sky-200 dark:border-slate-700 mb-3 shadow-xs">
+                            <div class="text-xs font-bold text-slate-500">이번 주 평균 수면</div>
+                            <div class="text-xl font-jua text-sky-600 dark:text-sky-300 mt-0.5">5.2시간 <span class="text-xs text-cyan-700 dark:text-cyan-400 font-sans font-bold">(권장량보다 2.3h 부족해요 🥺)</span></div>
+                            <div class="w-full bg-sky-100 dark:bg-slate-700 h-2 rounded-full mt-2 overflow-hidden">
+                                <div class="bg-sky-500 h-full rounded-full" style="width: 65%;"></div>
+                            </div>
+                        </div>
+
+                        <!-- AI Insight Text -->
+                        <div class="space-y-2 text-xs font-medium text-slate-700 dark:text-slate-300">
+                            <div class="p-2.5 bg-white/80 dark:bg-slate-800/80 rounded-2xl border border-sky-100 dark:border-slate-700">
+                                <span class="font-bold text-sky-700 dark:text-sky-300">⚠️ 만성 피로 경보:</span> 시험기간으로 피로가 우르르 쌓였어요!
+                            </div>
+                            <div class="p-2.5 bg-white/80 dark:bg-slate-800/80 rounded-2xl border border-sky-100 dark:border-slate-700">
+                                <span class="font-bold text-teal-600 dark:text-teal-300">💡 모몬가의 꿀팁:</span> 점심시간에 15분 토막잠을 자고 보건실 힐링 코스로 푹 쉬자!
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Button to Medicine Recommendation Modal -->
+                    <button onclick="openModal('medicineModal')" class="mt-4 w-full py-2.5 bg-sky-500 hover:bg-sky-600 text-white font-jua text-sm rounded-2xl transition cute-btn flex items-center justify-center gap-1.5">
+                        <span>💊 피로회복제 & 맞춤 약 꿀조합 보기</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- SECTION 4: Digital Wellness with Chiikawa Band & Interactive Squishy -->
+            <section class="cute-card p-5 md:p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-2">
+                        <!-- Chiikawa Trio Mini Icon -->
+                        <div class="flex -space-x-2 overflow-hidden p-1">
+                            <div class="w-7 h-7 rounded-full bg-pink-100 border border-pink-300 flex items-center justify-center text-xs">🐱</div>
+                            <div class="w-7 h-7 rounded-full bg-sky-100 border border-sky-300 flex items-center justify-center text-xs">🐻</div>
+                            <div class="w-7 h-7 rounded-full bg-amber-100 border border-amber-300 flex items-center justify-center text-xs">🐰</div>
+                        </div>
+                        <span class="px-3 py-1 bg-teal-100 dark:bg-teal-950 text-teal-700 dark:text-teal-300 rounded-2xl text-xs font-bold border border-teal-200">
+                            ☘️ 먼작귀 친구들의 퐁신 웰니스 룸
+                        </span>
+                        <h3 class="font-jua text-lg md:text-xl text-slate-800 dark:text-slate-100">맞춤형 디지털 힐링 타임 ☕</h3>
+                    </div>
+                </div>
+
+                <!-- Interactive Squishy Toy Zone -->
+                <div class="bg-gradient-to-r from-pink-100/70 via-sky-100/70 to-purple-100/70 dark:from-slate-900 dark:via-sky-950/40 dark:to-slate-900 p-4 rounded-3xl mb-5 border-2 border-pink-200 dark:border-slate-800 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="space-y-1 text-center md:text-left">
+                        <span class="px-2.5 py-0.5 bg-pink-200 dark:bg-pink-900 text-pink-800 dark:text-pink-200 font-jua text-xs rounded-full inline-block mb-1">
+                            ✨ 신상 스트레스 해소 템
+                        </span>
+                        <h4 class="font-jua text-lg text-slate-800 dark:text-slate-100 flex items-center justify-center md:justify-start gap-1.5">
+                            <span>🧸 말랑말랑 힐링 말랑이 존</span>
+                        </h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 font-bold">
+                            마우스나 손가락으로 말랑이를 꾹~ 누르거나 주물러보세요! <br class="hidden sm:inline">다채롭고 통통 튀는 힐링 사운드와 함께 스트레스가 사르르 사라져요 ☁️
+                        </p>
+                        <div class="flex items-center justify-center md:justify-start gap-2 pt-1 font-jua text-xs text-sky-700 dark:text-sky-300">
+                            <span>눌린 횟수: <strong id="squishyCount" class="text-pink-600 dark:text-pink-400 text-base">0</strong>회 🐾</span>
+                            <button onclick="resetSquishyCount()" class="text-[10px] bg-white/70 dark:bg-slate-800 px-2 py-0.5 rounded-lg border border-sky-200 dark:border-slate-700 hover:bg-white">초기화</button>
+                        </div>
+                    </div>
+
+                    <div class="relative w-48 h-48 bg-white/60 dark:bg-slate-800/60 rounded-3xl border-2 border-white dark:border-slate-700 flex items-center justify-center shadow-inner cursor-pointer select-none touch-none group"
+                         id="squishyBox"
+                         onmousedown="startSquish(event)"
+                         onmouseup="endSquish(event)"
+                         onmouseleave="endSquish(event)"
+                         ontouchstart="startSquish(event)"
+                         ontouchend="endSquish(event)">
+                        
+                        <span class="absolute top-2 text-[10px] font-jua text-pink-500 bg-white/90 dark:bg-slate-900 px-2 py-0.5 rounded-full shadow-xs pointer-events-none transition group-hover:scale-110">
+                            👈 꾹 눌러주세요!
+                        </span>
+
+                        <div id="squishyBody" class="w-36 h-36 relative transition-transform duration-150 ease-out flex items-center justify-center">
+                            <svg viewBox="0 0 100 100" class="w-full h-full filter drop-shadow-md">
+                                <circle cx="50" cy="50" r="42" fill="#FCE7F3" stroke="#F472B6" stroke-width="4"/>
+                                <circle cx="42" cy="40" r="30" fill="#FFF" opacity="0.3"/>
+                                <circle cx="36" cy="48" r="4.5" fill="#831843"/>
+                                <circle cx="64" cy="48" r="4.5" fill="#831843"/>
+                                <circle cx="34.5" cy="46" r="1.5" fill="#FFF"/>
+                                <circle cx="62.5" cy="46" r="1.5" fill="#FFF"/>
+                                <circle cx="28" cy="56" r="6" fill="#F472B6" opacity="0.7"/>
+                                <circle cx="72" cy="56" r="6" fill="#F472B6" opacity="0.7"/>
+                                <path id="squishyMouth" d="M44 58 Q50 63 56 58" fill="none" stroke="#831843" stroke-width="3" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chiikawa Band Banner Graphic with Clickable Tambourine -->
+                <div class="bg-gradient-to-r from-sky-50 via-indigo-50 to-pink-50 dark:from-slate-900 dark:to-slate-800 p-3 rounded-2xl border border-sky-100 dark:border-slate-700 flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-24 h-12 shrink-0 cursor-pointer transition hover:scale-105" onclick="playTambourineSound()" title="클릭해서 템버린 연주하기!">
+                            <svg viewBox="0 0 200 100" class="w-full h-full">
+                                <circle cx="40" cy="60" r="22" fill="#FFF" stroke="#334155" stroke-width="3"/>
+                                <circle cx="30" cy="40" r="6" fill="#FFF" stroke="#334155" stroke-width="3"/>
+                                <circle cx="50" cy="40" r="6" fill="#FFF" stroke="#334155" stroke-width="3"/>
+                                <circle cx="33" cy="60" r="2.5" fill="#334155"/>
+                                <circle cx="47" cy="60" r="2.5" fill="#334155"/>
+                                <circle cx="28" cy="65" r="4" fill="#F472B6" opacity="0.6"/>
+                                <circle cx="52" cy="65" r="4" fill="#F472B6" opacity="0.6"/>
+                                <path d="M38 65 Q40 68 42 65" stroke="#334155" stroke-width="2" fill="none"/>
+                                <circle cx="100" cy="60" r="22" fill="#FFF" stroke="#334155" stroke-width="3"/>
+                                <path d="M82 48 C85 38 100 38 100 48 L118 48 C118 38 100 38 95 48 Z" fill="#38BDF8" stroke="#334155" stroke-width="2"/>
+                                <circle cx="93" cy="60" r="2.5" fill="#334155"/>
+                                <circle cx="107" cy="60" r="2.5" fill="#334155"/>
+                                <circle cx="88" cy="65" r="4" fill="#F472B6" opacity="0.6"/>
+                                <circle cx="112" cy="65" r="4" fill="#F472B6" opacity="0.6"/>
+                                <path d="M98 65 Q100 68 102 65" stroke="#334155" stroke-width="2" fill="none"/>
+                                <circle cx="160" cy="65" r="20" fill="#FEF08A" stroke="#334155" stroke-width="3"/>
+                                <path d="M152 48 C150 25 158 25 156 48 Z" fill="#FEF08A" stroke="#334155" stroke-width="2"/>
+                                <path d="M168 48 C166 25 174 25 172 48 Z" fill="#FEF08A" stroke="#334155" stroke-width="2"/>
+                                <circle cx="154" cy="65" r="2.5" fill="#334155"/>
+                                <circle cx="166" cy="65" r="2.5" fill="#334155"/>
+                                <path d="M158 69 Q160 72 162 69" stroke="#334155" stroke-width="2" fill="none"/>
+                            </svg>
+                        </div>
+                        <p class="text-xs font-jua text-sky-900 dark:text-sky-200">
+                            치이카와, 하치와레, 우사기를 누르면 신나는 템버린 소리가 나요! 🎵
+                        </p>
+                    </div>
+                    <button onclick="playTambourineSound()" class="text-xs font-bold text-pink-500 bg-pink-100 dark:bg-pink-950 hover:bg-pink-200 px-3 py-1.5 rounded-xl transition cute-btn">
+                        🥁 템버린 짝짝!
+                    </button>
+                </div>
+            </section>
+
+            <!-- SECTION 5: Pre-Checkin Form for Students -->
+            <section class="cute-card p-5 md:p-6">
+                <div class="flex items-center space-x-2 mb-3">
+                    <span class="px-3 py-1 bg-sky-100 dark:bg-sky-950 text-sky-700 dark:text-sky-300 rounded-2xl text-xs font-bold border border-sky-200">
+                        💌 스마트 보건실 
+                    </span>
+                    <h3 class="font-jua text-lg md:text-xl text-slate-800 dark:text-slate-100">보건실 사전자진 체크인 신청</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">방문 호소 사유</label>
+                            <select id="checkinReason" class="w-full bg-sky-50 dark:bg-slate-800 border-2 border-sky-100 dark:border-slate-700 rounded-xl p-2.5 text-xs font-bold text-slate-700 dark:text-slate-300 focus:outline-hidden">
+                                <option>두통 및 수면부족 요양</option>
+                                <option>소화불량 및 복통</option>
+                                <option>눈 피로 및 어지러움</option>
+                                <option>스트레스 케어 및 상담 요청</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">현재 통증 / 피로 정도 (VAS) : <span id="painLevelLabel" class="text-sky-600 font-jua">4점</span></label>
+                            <input type="range" id="painLevelInput" min="1" max="10" value="4" oninput="updatePainLabel(this.value)" class="w-full accent-sky-500 bg-sky-200 dark:bg-slate-700 h-2 rounded-lg cursor-pointer">
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">선생님께 남길 남김말 (선택)</label>
+                            <textarea id="checkinMemo" rows="2" placeholder="예: 3교시 쉬는시간에 방문하겠습니다." class="w-full bg-sky-50 dark:bg-slate-800 border-2 border-sky-100 dark:border-slate-700 rounded-xl p-2.5 text-xs text-slate-700 dark:text-slate-300 focus:outline-hidden resize-none"></textarea>
+                        </div>
+                        <button onclick="submitCheckin()" class="w-full py-2.5 bg-sky-500 hover:bg-sky-600 text-white font-jua text-sm rounded-xl cute-btn transition">
+                            💌 보건선생님께 사전 제출하기
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- TEACHER DASHBOARD VIEW -->
+        <div id="teacherView" class="space-y-6 hidden">
+            
+            <!-- Dashboard Top Banner -->
+            <div class="bg-gradient-to-r from-sky-700 via-sky-800 to-indigo-900 text-white rounded-3xl p-5 md:p-6 shadow-md border-2 border-sky-600 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div class="space-y-1">
+                    <div class="flex items-center space-x-2">
+                        <span class="px-3 py-0.5 bg-sky-500/40 text-sky-100 rounded-full text-xs font-bold border border-sky-400/40">🩺 보건교사 전용 대시보드</span>
+                        <span class="text-xs text-sky-200 font-bold" id="teacherTodayDate">2026.10.28 (수)</span>
+                    </div>
+                    <h2 class="font-jua text-2xl text-white">학생 수면·스트레스 실시간 관제 센터 🩺</h2>
+                    <p class="text-xs text-sky-100 opacity-90 font-medium">전교생의 자가 기록 데이터를 바탕으로 위험군 학생을 조기에 스크리닝하고 밀착 케어를 제공합니다.</p>
+                </div>
+                <button onclick="refreshTeacherList()" class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white text-xs font-bold rounded-2xl border border-white/30 transition backdrop-blur-xs flex items-center gap-1.5 shrink-0">
+                    <span>🔄 실시간 상태 갱신</span>
+                </button>
+            </div>
+
+            <!-- Summary KPI Cards for Teacher -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="cute-card p-4 border-l-4 border-l-rose-500 flex items-center justify-between">
+                    <div>
+                        <div class="text-xs font-bold text-slate-500 dark:text-slate-400">고위험군 학생 (수면 4h↓)</div>
+                        <div class="text-2xl font-jua text-rose-600 dark:text-rose-400 mt-1">12 명 <span class="text-xs font-sans text-rose-500"> (전체 4.8%)</span></div>
+                    </div>
+                    <div class="w-10 h-10 rounded-2xl bg-rose-100 dark:bg-rose-950/60 flex items-center justify-center text-rose-600 text-lg">⚠️</div>
+                </div>
+
+                <div class="cute-card p-4 border-l-4 border-l-sky-500 flex items-center justify-between">
+                    <div>
+                        <div class="text-xs font-bold text-slate-500 dark:text-slate-400">전교생 평균 수면시간</div>
+                        <div class="text-2xl font-jua text-sky-600 dark:text-sky-400 mt-1">5.6 시간 <span class="text-xs font-sans text-slate-400">(권장 7~8h)</span></div>
+                    </div>
+                    <div class="w-10 h-10 rounded-2xl bg-sky-100 dark:bg-sky-950/60 flex items-center justify-center text-sky-600 text-lg">💤</div>
+                </div>
+
+                <div class="cute-card p-4 border-l-4 border-l-amber-500 flex items-center justify-between">
+                    <div>
+                        <div class="text-xs font-bold text-slate-500 dark:text-slate-400">사전 체크인 접수 현황</div>
+                        <div class="text-2xl font-jua text-amber-600 dark:text-amber-400 mt-1" id="pendingCheckinCount">3 건 💌</div>
+                    </div>
+                    <div class="w-10 h-10 rounded-2xl bg-amber-100 dark:bg-amber-950/60 flex items-center justify-center text-amber-600 text-lg">📋</div>
+                </div>
+
+                <div class="cute-card p-4 border-l-4 border-l-teal-500 flex items-center justify-between">
+                    <div>
+                        <div class="text-xs font-bold text-slate-500 dark:text-slate-400">오늘 웰니스 미션 완료율</div>
+                        <div class="text-2xl font-jua text-teal-600 dark:text-teal-400 mt-1">68.4 %</div>
+                    </div>
+                    <div class="w-10 h-10 rounded-2xl bg-teal-100 dark:bg-teal-950/60 flex items-center justify-center text-teal-600 text-lg">☘️</div>
+                </div>
+            </div>
+
+            <!-- Student Check-in Management Table -->
+            <div class="cute-card p-5 md:p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="font-jua text-lg md:text-xl text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                            <span>🩺 보건실 사전 체크인 접수 대장</span>
+                        </h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 font-bold">학생들이 모바일로 사전에 제출한 증상 및 통증 지수입니다.</p>
+                    </div>
+                    <span class="text-xs font-bold px-3 py-1 bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300 rounded-full border border-sky-200">
+                        실시간 연동 중 ⚡
+                    </span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="border-b-2 border-sky-100 dark:border-slate-800 text-slate-500 font-bold bg-sky-50/50 dark:bg-slate-800/50">
+                                <th class="py-3 px-3">접수시간</th>
+                                <th class="py-3 px-3">학생 식별 ID</th>
+                                <th class="py-3 px-3">호소 증상</th>
+                                <th class="py-3 px-3">통증지수(VAS)</th>
+                                <th class="py-3 px-3">어제 수면시간</th>
+                                <th class="py-3 px-3">학생 남김 메모</th>
+                                <th class="py-3 px-3 text-right">맞춤 보건지도</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teacherCheckinTable" class="divide-y divide-sky-50 dark:divide-slate-800 font-bold text-slate-700 dark:text-slate-300">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- MODALS -->
+
+    <!-- Modal: User Guide (사용설명서 팝업) -->
+    <div id="guideModal" class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
+        <div class="bg-white dark:bg-slate-900 max-w-2xl w-full rounded-3xl p-6 shadow-xl border-2 border-sky-300 dark:border-slate-800 space-y-4 max-h-[85vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b pb-3 border-sky-100 dark:border-slate-800">
+                <div class="flex items-center space-x-2.5">
+                    <span class="text-2xl">📖</span>
+                    <div>
+                        <h3 class="font-jua text-xl text-sky-950 dark:text-sky-100">S-REM 스마트 렘 사용설명서</h3>
+                        <p class="text-xs text-sky-600 dark:text-sky-400 font-bold">슬기로운 수면 및 스트레스 케어 가이드 ✨</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('guideModal')" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">&times;</button>
+            </div>
+
+            <!-- Guide Sections -->
+            <div class="space-y-4 text-xs font-medium text-slate-700 dark:text-slate-300">
+                
+                <!-- Section 1 -->
+                <div class="p-4 bg-sky-50/80 dark:bg-slate-800/80 rounded-2xl border border-sky-100 dark:border-slate-700 space-y-2">
+                    <h4 class="font-jua text-sm text-sky-900 dark:text-sky-300 flex items-center gap-1.5">
+                        <span>1. 🍮 폼폼푸린의 3초 뚝딱 기록 (데일리 체크인)</span>
+                    </h4>
+                    <p class="leading-relaxed text-slate-600 dark:text-slate-300">
+                        • <strong>수면 시간:</strong> 슬라이더를 움직여 어제 몇 시간 동안 잤는지 설정해요.<br>
+                        • <strong>기분 & 증상:</strong> 이모지와 증상 태그(#두통, #눈피로 등)를 콕 찍어 선택한 뒤 <strong>[기록 완료하기]</strong>를 눌러주세요.<br>
+                        • 입력한 모든 기록은 안전하게 암호화 보관되며 그래프 분석 데이터로 활용돼요.
+                    </p>
+                </div>
+
+                <!-- Section 2 -->
+                <div class="p-4 bg-cyan-50/80 dark:bg-slate-800/80 rounded-2xl border border-cyan-100 dark:border-slate-700 space-y-2">
+                    <h4 class="font-jua text-sm text-cyan-900 dark:text-cyan-300 flex items-center gap-1.5">
+                        <span>2. 📊 주간 리프레시 리포트 & 닥터 모몬가 AI</span>
+                    </h4>
+                    <p class="leading-relaxed text-slate-600 dark:text-slate-300">
+                        • <strong>수면 & 스트레스 그래프:</strong> 지난 7일 동안 내 수면 리듬의 곡선 변화를 한눈에 볼 수 있어요.<br>
+                        • <strong>닥터 모몬가 분석:</strong> 내 수면 데이터를 바탕으로 피로도 경보 및 맞춤 꿀팁을 제시해요.<br>
+                        • <strong>💊 약 꿀조합 보기:</strong> 만성 피로, 긴장성 두통 등에 효과적인 약국 및 보건실 피로회복제 꿀조합을 추천받을 수 있습니다.
+                    </p>
+                </div>
+
+                <!-- Section 3 -->
+                <div class="p-4 bg-pink-50/80 dark:bg-slate-800/80 rounded-2xl border border-pink-100 dark:border-slate-700 space-y-2">
+                    <h4 class="font-jua text-sm text-pink-900 dark:text-pink-300 flex items-center gap-1.5">
+                        <span>3. 🧸 먼작귀 친구들의 퐁신 웰니스 룸 (스트레스 해소)</span>
+                    </h4>
+                    <p class="leading-relaxed text-slate-600 dark:text-slate-300">
+                        • <strong>말랑이 존:</strong> 마우스나 터치로 말랑말랑 캐릭터를 꾹~ 주물러 보세요! 다채로운 퐁신 사운드와 함께 스트레스를 날릴 수 있습니다.<br>
+                        • <strong>치이카와 템버린:</strong> 밴드 아이콘을 클릭하여 신나는 템버린 짝짝 소리로 기분을 리프레시해 보세요!
+                    </p>
+                </div>
+
+                <!-- Section 4 -->
+                <div class="p-4 bg-indigo-50/80 dark:bg-slate-800/80 rounded-2xl border border-indigo-100 dark:border-slate-700 space-y-2">
+                    <h4 class="font-jua text-sm text-indigo-900 dark:text-indigo-300 flex items-center gap-1.5">
+                        <span>4. 💌 스마트 보건실 사전 체크인 & 교사 관제센터</span>
+                    </h4>
+                    <p class="leading-relaxed text-slate-600 dark:text-slate-300">
+                        • <strong>사전 체크인:</strong> 보건실을 방문하기 전, 호소 사유와 통증 점수를 보건선생님께 모바일로 사전 제출할 수 있습니다.<br>
+                        • <strong>보건교사 관제센터:</strong> 우측 상단 모드 전환 버튼을 눌러 보건교사 비밀번호를 입력하면 실시간 전교생 수면 스크리닝 대시보드에 접속할 수 있습니다.
+                    </p>
+                </div>
+
+            </div>
+
+            <button onclick="closeModal('guideModal')" class="w-full py-2.5 bg-sky-500 hover:bg-sky-600 text-white font-jua text-base rounded-2xl cute-btn transition">
+                네, 이해했습니다! 꿀잠 자러 가기 ✨
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal: Teacher Password Verification -->
+    <div id="teacherAuthModal" class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
+        <div class="bg-white dark:bg-slate-900 max-w-sm w-full rounded-3xl p-6 shadow-xl border-2 border-sky-300 dark:border-slate-800 space-y-4 text-center">
+            <div class="w-12 h-12 bg-sky-100 dark:bg-sky-950 text-sky-600 dark:text-sky-300 rounded-2xl mx-auto flex items-center justify-center text-2xl font-bold">
+                🔒
+            </div>
+            <div>
+                <h3 class="font-jua text-lg text-slate-800 dark:text-slate-100">보건교사 인증 코드</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-bold mt-1">관제센터 접속을 위한 비밀번호 4자리를 입력하세요.</p>
+            </div>
+            
+            <form onsubmit="verifyTeacherCode(event)" class="space-y-4">
+                <input type="password" id="teacherAuthCodeInput" maxlength="4" placeholder="••••" pattern="[0-9]*" inputmode="numeric" autofocus class="w-full text-center tracking-widest text-2xl font-mono py-2 bg-sky-50 dark:bg-slate-800 border-2 border-sky-200 dark:border-slate-700 rounded-2xl text-sky-900 dark:text-sky-100 focus:outline-none focus:border-sky-500">
+                <p id="teacherAuthErrMsg" class="text-xs font-bold text-rose-500 hidden">⚠️ 비밀번호가 일치하지 않습니다.</p>
+
+                <div class="flex space-x-2">
+                    <button type="button" onclick="closeModal('teacherAuthModal')" class="w-1/2 py-2.5 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-jua text-sm rounded-2xl transition">
+                        취소
+                    </button>
+                    <button type="submit" class="w-1/2 py-2.5 bg-sky-500 hover:bg-sky-600 text-white font-jua text-sm rounded-2xl cute-btn transition">
+                        확인
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Medicine & Fatigue Supplement Recommendation -->
+    <div id="medicineModal" class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
+        <div class="bg-white dark:bg-slate-900 max-w-xl w-full rounded-3xl p-5 md:p-6 shadow-xl border-2 border-amber-300 dark:border-amber-800 space-y-4 max-h-[85vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b pb-3 border-amber-100 dark:border-slate-800">
+                <div class="flex items-center space-x-2.5">
+                    <span class="text-2xl">💊</span>
+                    <div>
+                        <h3 class="font-jua text-lg text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+                            시험기간 맞춤 피로회복제 & 약 꿀조합 추천
+                        </h3>
+                        <p class="text-[11px] text-amber-700 dark:text-amber-400 font-bold">약국 및 보건실에서 쉽게 찾을 수 있는 맞춤 힐링 처방! 🌿</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('medicineModal')" class="text-slate-400 hover:text-slate-600 text-2xl font-bold">&times;</button>
+            </div>
+
+            <!-- Notice Banner -->
+            <div class="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-2xl p-3 text-xs font-bold text-amber-900 dark:text-amber-200 flex items-center gap-2">
+                <span>⚠️</span>
+                <span>복용 전 반드시 약사님이나 보건 선생님과 상담하고, 제품의 설명서 및 권장 용량을 꼭 확인하세요!</span>
+            </div>
+
+            <!-- Cards Container -->
+            <div class="space-y-3.5">
+                
+                <!-- Rec 1: Fatigue Energy Pack -->
+                <div class="bg-sky-50/70 dark:bg-slate-800 border-2 border-sky-100 dark:border-slate-700 rounded-2xl p-3.5 flex flex-col sm:flex-row items-center gap-3.5">
+                    <img src="https://placehold.co/120x120/7dd3fc/075985?text=비타민B+마그네슘" alt="고함량 비타민B 앰플" class="w-24 h-24 rounded-2xl object-cover shrink-0 border-2 border-sky-200">
+                    <div class="space-y-1 w-full text-xs">
+                        <div class="flex items-center justify-between">
+                            <span class="font-jua text-sm text-sky-900 dark:text-sky-300">⚡ 만성피로 싹- 앰플 꿀조합</span>
+                            <span class="px-2 py-0.5 bg-sky-200 dark:bg-sky-950 text-sky-800 dark:text-sky-300 rounded-lg text-[10px] font-bold">에너지 충전</span>
+                        </div>
+                        <p class="font-bold text-slate-700 dark:text-slate-300">고함량 비타민 B군 앰플 + 액상 마그네슘</p>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">체내 에너지 대사를 촉진하여 누적된 육체 피로를 빠르게 개선하고 근육 경련이나 눈 찌릿함을 완화해 줘요.</p>
+                        <div class="text-[10px] text-sky-700 dark:text-sky-400 font-bold bg-sky-100/60 dark:bg-slate-900 p-1.5 rounded-xl">
+                            💡 Tip: 아침 식사 후 복용하면 하루 종일 생기가 유지돼요!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rec 2: Tension & Muscle Relax -->
+                <div class="bg-teal-50/70 dark:bg-slate-800 border-2 border-teal-100 dark:border-slate-700 rounded-2xl p-3.5 flex flex-col sm:flex-row items-center gap-3.5">
+                    <img src="https://placehold.co/120x120/99f6e4/115e59?text=테아닌+마그네슘" alt="L-테아닌 및 마그네슘" class="w-24 h-24 rounded-2xl object-cover shrink-0 border-2 border-teal-200">
+                    <div class="space-y-1 w-full text-xs">
+                        <div class="flex items-center justify-between">
+                            <span class="font-jua text-sm text-teal-900 dark:text-teal-300">🌙 긴장 완화 & 푹잠 꿀조합</span>
+                            <span class="px-2 py-0.5 bg-teal-200 dark:bg-teal-950 text-teal-800 dark:text-teal-300 rounded-lg text-[10px] font-bold">수면 품질 UP</span>
+                        </div>
+                        <p class="font-bold text-slate-700 dark:text-slate-300">L-테아닌 + 수면 마그네슘 영양제</p>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">시험으로 뇌가 과열되어 밤에 잠이 안 올 때! 알파파 발생을 유도해 뇌 스트레스를 줄이고 깊은 수면을 도와줍니다.</p>
+                        <div class="text-[10px] text-teal-700 dark:text-teal-400 font-bold bg-teal-100/60 dark:bg-slate-900 p-1.5 rounded-xl">
+                            💡 Tip: 잠들기 30분~1시간 전에 따뜻한 물과 함께 복용하세요.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rec 3: Head Pain & Eye Strain Care -->
+                <div class="bg-indigo-50/70 dark:bg-slate-800 border-2 border-indigo-100 dark:border-slate-700 rounded-2xl p-3.5 flex flex-col sm:flex-row items-center gap-3.5">
+                    <img src="https://placehold.co/120x120/c7d2fe/312e81?text=아세트아미노펜+루테인" alt="두통약 및 인공눈물" class="w-24 h-24 rounded-2xl object-cover shrink-0 border-2 border-indigo-200">
+                    <div class="space-y-1 w-full text-xs">
+                        <div class="flex items-center justify-between">
+                            <span class="font-jua text-sm text-indigo-900 dark:text-indigo-300">🤕 긴장성 두통 & 눈피로 케어</span>
+                            <span class="px-2 py-0.5 bg-indigo-200 dark:bg-indigo-950 text-indigo-800 dark:text-indigo-300 rounded-lg text-[10px] font-bold">증상 완화</span>
+                        </div>
+                        <p class="font-bold text-slate-700 dark:text-slate-300">아세트아미노펜 (또는 이부프로펜) + 일회용 무보존제 점안액</p>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">수면 부족으로 유발되는 관자놀이 두통엔 진통제를, 모니터/책을 오래 봐 뻑뻑해진 눈엔 인공눈물 수분 충전!</p>
+                        <div class="text-[10px] text-indigo-700 dark:text-indigo-400 font-bold bg-indigo-100/60 dark:bg-slate-900 p-1.5 rounded-xl">
+                            💡 Tip: 보건실 방문 시 사전 체크인 메시지를 제출하면 더욱 빠르게 안내받을 수 있습니다.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <button onclick="closeModal('medicineModal')" class="w-full py-2.5 bg-amber-400 hover:bg-amber-500 text-slate-900 font-jua text-base rounded-2xl cute-btn transition">
+                확인 완료! 고마워 모몬가 ✨
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal: Privacy Policy & Anti-Stigma -->
+    <div id="privacyModal" class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
+        <div class="bg-white dark:bg-slate-900 max-w-md w-full rounded-3xl p-6 shadow-xl border-2 border-sky-200 dark:border-slate-800 space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="font-jua text-lg text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                    🛡️ 개인정보 보호 & 낙인 방지 안내
+                </h3>
+                <button onclick="closeModal('privacyModal')" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+            </div>
+            
+            <div class="text-xs font-medium text-slate-600 dark:text-slate-300 space-y-2.5 leading-relaxed">
+                <div class="p-3 bg-sky-50 dark:bg-slate-800 rounded-2xl border border-sky-100">
+                    <strong class="text-sky-900 dark:text-sky-300 block font-jua text-sm mb-0.5">1. 철저한 암호화 보호 🔒</strong>
+                    학생 개인의 수면 및 스트레스 기록은 안전하게 암호화 관리되며 절대 타인에게 무단 공개되지 않습니다.
+                </div>
+                <div class="p-3 bg-sky-50 dark:bg-slate-800 rounded-2xl border border-sky-100">
+                    <strong class="text-sky-900 dark:text-sky-300 block font-jua text-sm mb-0.5">2. 성적·평가 이용 절대 금지 🚫</strong>
+                    본 앱의 모든 데이터는 비교나 성적 평가 목적으로 사용될 수 없도록 엄격히 비공개 분류됩니다.
+                </div>
+            </div>
+
+            <button onclick="closeModal('privacyModal')" class="w-full py-2.5 bg-sky-500 hover:bg-sky-600 text-white font-jua text-base rounded-2xl cute-btn transition">
+                확인했습니다 ✨
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal: Emergency Contact (1388) -->
+    <div id="emergencyModal" class="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
+        <div class="bg-white dark:bg-slate-900 max-w-md w-full rounded-3xl p-6 shadow-xl border-2 border-cyan-200 dark:border-slate-800 space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="font-jua text-lg text-cyan-600 dark:text-cyan-400 flex items-center gap-2">
+                    🆘 청소년 도우미 전문 상담 연결
+                </h3>
+                <button onclick="closeModal('emergencyModal')" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+            </div>
+
+            <p class="text-xs font-medium text-slate-600 dark:text-slate-300">
+                지속적인 스트레스나 두통으로 마음이 힘든가요? 언제든 친절한 전문가 선생님과 이야기 나눌 수 있어요 💙
+            </p>
+
+            <div class="space-y-2 font-bold">
+                <a href="tel:1388" class="flex items-center justify-between p-3.5 bg-sky-50 dark:bg-sky-950/60 rounded-2xl border border-sky-200 dark:border-sky-900 hover:bg-sky-100 transition">
+                    <div>
+                        <div class="font-jua text-sky-900 dark:text-sky-200 text-sm">청소년 전화 1388 📞</div>
+                        <div class="text-[10px] text-slate-500 font-normal">24시간 언제든 무료 상담 가능!</div>
+                    </div>
+                    <span class="px-3.5 py-1.5 bg-sky-500 text-white font-jua text-xs rounded-xl cute-btn">전화하기</span>
+                </a>
+            </div>
+
+            <button onclick="closeModal('emergencyModal')" class="w-full py-2.5 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-jua text-base rounded-2xl transition">
+                닫기
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white/80 dark:bg-[#0F172A] border-t-2 border-sky-100 dark:border-slate-800 py-6 transition-colors">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400 gap-3">
+            <div class="flex items-center space-x-2">
+                <span class="font-jua text-sky-600 dark:text-sky-300 text-sm">S-REM 스마트 렘 ☁️</span>
+                <span>|</span>
+                <span>고등학생 수면·스트레스 힐링케어</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button onclick="openModal('guideModal')" class="hover:underline">사용설명서</button>
+                <span>|</span>
+                <button onclick="openModal('privacyModal')" class="hover:underline">개인정보 처리방침</button>
+                <span>© 2026 S-REM Project ✨</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Application State
+        let currentRole = 'student';
+        let isEyeCareOn = false;
+        let selectedMood = 'tired';
+        let selectedSymptoms = [];
+        let myChart = null;
+
+        // Teacher Authentication Code
+        const TEACHER_AUTH_CODE = '0328';
+
+        // Squishy State variables
+        let squishCount = 0;
+        let isSquishing = false;
+
+        // Sound Audio Context & Oscillators
+        let audioCtx = null;
+        let noiseNodes = { rain: null, wave: null };
+
+        // Initial Sample Data for Teacher View
+        let checkinList = [
+            { id: 'STU-7821', time: '08:45', reason: '두통 / 어지럼증 요양', vas: '6점', sleep: '4.5시간', memo: '시험공부로 잠을 너무 못 잤어요' },
+            { id: 'STU-3419', time: '09:10', reason: '만성 피로 / 눈 피로', vas: '4점', sleep: '5.0시간', memo: '눈이 아프고 멍해요' },
+            { id: 'STU-9024', time: '10:30', reason: '소화불량 / 복통', vas: '5점', sleep: '5.2시간', memo: '아침부터 속이 안 좋아요' }
+        ];
+
+        // Custom Toast Notification System
+        function showMessage(title, text) {
+            let msgBox = document.getElementById('customMsgBox');
+            if (msgBox) msgBox.remove();
+
+            msgBox = document.createElement('div');
+            msgBox.id = 'customMsgBox';
+            msgBox.className = 'fixed bottom-6 right-6 z-50 max-w-sm bg-white dark:bg-slate-800 border-2 border-sky-300 dark:border-sky-800 rounded-3xl p-4 shadow-2xl transition-all duration-300 transform translate-y-0 opacity-100 flex items-start justify-between gap-3';
+            msgBox.innerHTML = `
+                <div class="flex items-start space-x-2.5">
+                    <div class="w-8 h-8 shrink-0 rounded-full bg-sky-100 flex items-center justify-center text-lg">
+                        🎀
+                    </div>
+                    <div>
+                        <h4 class="font-jua text-sky-600 dark:text-sky-300 text-sm mb-0.5">${title}</h4>
+                        <p class="text-xs font-bold text-slate-700 dark:text-slate-300 whitespace-pre-line">${text}</p>
+                    </div>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 font-bold text-base">&times;</button>
+            `;
+            document.body.appendChild(msgBox);
+
+            setTimeout(() => {
+                if (msgBox && msgBox.parentElement) {
+                    msgBox.classList.add('opacity-0', 'translate-y-2');
+                    setTimeout(() => msgBox.remove(), 300);
+                }
+            }, 3500);
+        }
+
+        window.onload = function() {
+            initChart();
+            renderTeacherTable();
+            
+            // Format today's date
+            const now = new Date();
+            const dateStr = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')} (수)`;
+            const dateEl = document.getElementById('currentTodayDate');
+            if(dateEl) dateEl.textContent = dateStr;
+        };
+
+        // Role Switching Logic
+        function requestTeacherAccess() {
+            if (currentRole === 'teacher') return;
+            document.getElementById('teacherAuthCodeInput').value = '';
+            document.getElementById('teacherAuthErrMsg').classList.add('hidden');
+            openModal('teacherAuthModal');
+            setTimeout(() => {
+                document.getElementById('teacherAuthCodeInput').focus();
+            }, 100);
+        }
+
+        function verifyTeacherCode(e) {
+            e.preventDefault();
+            const inputCode = document.getElementById('teacherAuthCodeInput').value;
+            if (inputCode === TEACHER_AUTH_CODE) {
+                closeModal('teacherAuthModal');
+                setRole('teacher');
+                showMessage('🩺 관제센터 입장', '보건교사 관제센터 인증이 완료되었습니다.');
+            } else {
+                document.getElementById('teacherAuthErrMsg').classList.remove('hidden');
+                document.getElementById('teacherAuthCodeInput').value = '';
+                document.getElementById('teacherAuthCodeInput').focus();
+            }
+        }
+
+        function setRole(role) {
+            currentRole = role;
+            const studentBtn = document.getElementById('roleStudentBtn');
+            const teacherBtn = document.getElementById('roleTeacherBtn');
+            const studentView = document.getElementById('studentView');
+            const teacherView = document.getElementById('teacherView');
+
+            if (role === 'student') {
+                studentBtn.className = "px-3.5 py-1.5 rounded-xl transition-all shadow-xs bg-sky-500 text-white dark:bg-sky-600";
+                teacherBtn.className = "px-3.5 py-1.5 rounded-xl transition-all text-sky-700 dark:text-sky-300 hover:bg-sky-100/50";
+                studentView.classList.remove('hidden');
+                teacherView.classList.add('hidden');
+            } else {
+                teacherBtn.className = "px-3.5 py-1.5 rounded-xl transition-all shadow-xs bg-sky-500 text-white dark:bg-sky-600";
+                studentBtn.className = "px-3.5 py-1.5 rounded-xl transition-all text-sky-700 dark:text-sky-300 hover:bg-sky-100/50";
+                teacherView.classList.remove('hidden');
+                studentView.classList.add('hidden');
+            }
+        }
+
+        // Dark Mode Toggle
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+        }
+
+        // Night Eye-Care Mode Toggle
+        function toggleEyeCare() {
+            isEyeCareOn = !isEyeCareOn;
+            const overlay = document.getElementById('blueLightOverlay');
+            if (isEyeCareOn) {
+                overlay.classList.remove('opacity-0');
+                overlay.classList.add('opacity-100');
+                showMessage('👓 눈보호 모드 켜짐', '블루라이트를 줄여 눈의 피로를 막아줍니다.');
+            } else {
+                overlay.classList.remove('opacity-100');
+                overlay.classList.add('opacity-0');
+            }
+        }
+
+        // Form Inputs
+        function updateSleepVal(val) {
+            document.getElementById('sleepHoursVal').textContent = val + ' 시간';
+        }
+
+        function selectMood(mood, btn) {
+            selectedMood = mood;
+            document.querySelectorAll('.mood-btn').forEach(b => {
+                b.classList.remove('border-sky-400', 'bg-sky-100', 'dark:bg-slate-800');
+                b.classList.add('border-transparent');
+            });
+            btn.classList.remove('border-transparent');
+            btn.classList.add('border-sky-400', 'bg-sky-100', 'dark:bg-slate-800');
+        }
+
+        function toggleSymptom(symptom, btn) {
+            if (selectedSymptoms.includes(symptom)) {
+                selectedSymptoms = selectedSymptoms.filter(s => s !== symptom);
+                btn.classList.remove('bg-sky-500', 'text-white');
+                btn.classList.add('bg-white', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+            } else {
+                selectedSymptoms.push(symptom);
+                btn.classList.remove('bg-white', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+                btn.classList.add('bg-sky-500', 'text-white');
+            }
+        }
+
+        function handleLogSubmit(e) {
+            e.preventDefault();
+            const hours = document.getElementById('sleepHoursInput').value;
+            
+            // Update chart dynamically
+            if(myChart) {
+                myChart.data.datasets[0].data[6] = parseFloat(hours);
+                myChart.update();
+            }
+
+            showMessage('✨ 수면 기록 완수!', `오늘 수면: ${hours}시간\n선택 증상: ${selectedSymptoms.join(', ') || '없음'}\n데이터가 기기에 암호화 저장되었습니다.`);
+        }
+
+        function updatePainLabel(val) {
+            const label = document.getElementById('painLevelLabel');
+            if (val <= 3) label.textContent = `${val}점 (경미함)`;
+            else if (val <= 6) label.textContent = `${val}점 (수업에 조금 지장이 있어요)`;
+            else label.textContent = `${val}점 (극심한 통증/휴식 필요)`;
+        }
+
+        // Smart Pre-Checkin Submission
+        function submitCheckin() {
+            const reason = document.getElementById('checkinReason').value;
+            const vas = document.getElementById('painLevelInput').value + '점';
+            const memo = document.getElementById('checkinMemo').value || '특이사항 없음';
+            const hours = document.getElementById('sleepHoursInput').value;
+
+            const now = new Date();
+            const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+            const randomId = 'STU-' + Math.floor(10000 + Math.random() * 90000);
+
+            // Add to teacher list
+            checkinList.unshift({
+                id: randomId,
+                time: timeStr,
+                reason: reason,
+                vas: vas,
+                sleep: hours + '시간',
+                memo: memo
+            });
+
+            renderTeacherTable();
+            const countEl = document.getElementById('pendingCheckinCount');
+            if (countEl) countEl.textContent = `${checkinList.length}건 💌`;
+
+            showMessage('💌 보건실 전송 완료', '보건선생님께 사전 체크인 메시지와 수면 리포트가 전달되었습니다!');
+            document.getElementById('checkinMemo').value = '';
+        }
+
+        // Chart.js Setup with Sky/Teal Palette
+        function initChart() {
+            const ctx = document.getElementById('weeklyChart').getContext('2d');
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['목', '금', '토', '일', '월', '화', '오늘'],
+                    datasets: [
+                        {
+                            label: '수면 시간 (시간)',
+                            data: [4.5, 5.0, 7.5, 8.0, 5.5, 4.8, 5.5],
+                            borderColor: '#38BDF8',
+                            backgroundColor: 'rgba(56, 189, 248, 0.2)',
+                            fill: true,
+                            tension: 0.4,
+                            borderWidth: 3,
+                            pointBackgroundColor: '#0284C7',
+                            pointRadius: 5,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: '자가진단 스트레스 지수',
+                            data: [78, 85, 40, 35, 65, 75, 70],
+                            borderColor: '#2DD4BF',
+                            borderDash: [4, 4],
+                            fill: false,
+                            tension: 0.4,
+                            borderWidth: 3,
+                            pointBackgroundColor: '#0D9488',
+                            pointRadius: 4,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            min: 0,
+                            max: 12,
+                            title: { display: true, text: '시간(h)', font: { size: 10, weight: 'bold' } }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            min: 0,
+                            max: 100,
+                            grid: { drawOnChartArea: false },
+                            title: { display: true, text: '지수(점)', font: { size: 10, weight: 'bold' } }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        function renderTeacherTable() {
+            const tbody = document.getElementById('teacherCheckinTable');
+            if(!tbody) return;
+
+            tbody.innerHTML = checkinList.map(item => `
+                <tr class="hover:bg-sky-50/50 dark:hover:bg-slate-800/50 transition">
+                    <td class="py-3 px-2 font-mono text-slate-500">${item.time}</td>
+                    <td class="py-3 px-2 font-jua text-sky-600 dark:text-sky-300 text-sm">${item.id}</td>
+                    <td class="py-3 px-2">${item.reason}</td>
+                    <td class="py-3 px-2"><span class="px-2.5 py-0.5 bg-cyan-100 text-cyan-800 dark:bg-cyan-950 dark:text-cyan-300 rounded-lg font-bold">${item.vas}</span></td>
+                    <td class="py-3 px-2 font-outfit">${item.sleep}</td>
+                    <td class="py-3 px-2 text-slate-500 max-w-xs truncate">${item.memo}</td>
+                    <td class="py-3 px-2 text-right">
+                        <button onclick="showMessage('💌 지도 안내 전송', '${item.id} 학생에게 보건실 방문 안내 메시지를 보냈습니다.')" class="px-3 py-1 bg-sky-500 hover:bg-sky-600 text-white rounded-xl font-jua text-xs cute-btn">
+                            보건지도 수신 💌
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function refreshTeacherList() {
+            renderTeacherTable();
+            showMessage('🔄 목록 갱신', '최신 보건실 사전 체크인 접수 목록이 업데이트되었습니다.');
+        }
+
+        // Interactive Squishy (말랑이) Logic & Web Audio Pop Sound
+        function startSquish(e) {
+            if (e.cancelable) e.preventDefault();
+            isSquishing = true;
+            
+            const squishyBody = document.getElementById('squishyBody');
+            const mouth = document.getElementById('squishyMouth');
+            
+            const scaleX = 1.25 + (Math.random() * 0.1 - 0.05);
+            const scaleY = 0.75 + (Math.random() * 0.1 - 0.05);
+            squishyBody.style.transform = `scale(${scaleX}, ${scaleY})`;
+            if (mouth) mouth.setAttribute('d', 'M42 62 Q50 56 58 62');
+
+            playSquishySound();
+
+            squishCount++;
+            const countEl = document.getElementById('squishyCount');
+            if (countEl) countEl.textContent = squishCount;
+
+            if (squishCount === 10) {
+                showMessage('🧸 말랑이 마스터!', '10번 조물조물 하셨네요! 스트레스가 조금씩 풀리고 있어요 💕');
+            } else if (squishCount === 30) {
+                showMessage('🎉 말랑이 힐링 폭발!', '30번 달성! 오늘 쌓인 스트레스가 완전히 싹 날아갔어요! ☁️');
+            }
+        }
+
+        function endSquish(e) {
+            if (!isSquishing) return;
+            isSquishing = false;
+            
+            const squishyBody = document.getElementById('squishyBody');
+            const mouth = document.getElementById('squishyMouth');
+
+            squishyBody.style.transform = 'scale(0.9, 1.1)';
+            setTimeout(() => {
+                squishyBody.style.transform = 'scale(1, 1)';
+            }, 120);
+
+            if (mouth) mouth.setAttribute('d', 'M44 58 Q50 63 56 58');
+        }
+
+        function resetSquishyCount() {
+            squishCount = 0;
+            const countEl = document.getElementById('squishyCount');
+            if (countEl) countEl.textContent = 0;
+        }
+
+        // Advanced Web Audio API Synthesizer: Diverse Squishy Sound Variations
+        function playSquishySound() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const soundTypes = ['cute_pop', 'water_drop', 'bubble_bounce', 'high_squeak', 'jelly_wobble'];
+                const selectedType = soundTypes[Math.floor(Math.random() * soundTypes.length)];
+
+                const now = audioCtx.currentTime;
+
+                if (selectedType === 'cute_pop') {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    const startFreq = 250 + Math.random() * 120;
+                    const endFreq = 480 + Math.random() * 200;
+
+                    osc.frequency.setValueAtTime(startFreq, now);
+                    osc.frequency.exponentialRampToValueAtTime(endFreq, now + 0.08);
+
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.08);
+
+                } else if (selectedType === 'water_drop') {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    const baseFreq = 500 + Math.random() * 300;
+
+                    osc.frequency.setValueAtTime(baseFreq, now);
+                    osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.8, now + 0.06);
+
+                    gain.gain.setValueAtTime(0.25, now);
+                    gain.gain.linearRampToValueAtTime(0.01, now + 0.07);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.07);
+
+                } else if (selectedType === 'bubble_bounce') {
+                    [0, 0.04].forEach((delay, idx) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'triangle';
+                        const f = (idx === 0 ? 300 : 450) + Math.random() * 80;
+
+                        osc.frequency.setValueAtTime(f, now + delay);
+                        osc.frequency.exponentialRampToValueAtTime(f * 1.4, now + delay + 0.05);
+
+                        gain.gain.setValueAtTime(0.18, now + delay);
+                        gain.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.05);
+
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start(now + delay);
+                        osc.stop(now + delay + 0.05);
+                    });
+
+                } else if (selectedType === 'high_squeak') {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    const freq = 800 + Math.random() * 400;
+
+                    osc.frequency.setValueAtTime(freq, now);
+                    osc.frequency.exponentialRampToValueAtTime(freq * 0.7, now + 0.06);
+
+                    gain.gain.setValueAtTime(0.15, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.06);
+
+                } else if (selectedType === 'jelly_wobble') {
+                    const carrier = audioCtx.createOscillator();
+                    const modulator = audioCtx.createOscillator();
+                    const modGain = audioCtx.createGain();
+                    const masterGain = audioCtx.createGain();
+
+                    carrier.type = 'sine';
+                    carrier.frequency.setValueAtTime(320 + Math.random() * 100, now);
+
+                    modulator.type = 'sine';
+                    modulator.frequency.setValueAtTime(35, now);
+                    modGain.gain.setValueAtTime(150, now);
+
+                    modulator.connect(carrier.frequency);
+
+                    masterGain.gain.setValueAtTime(0.2, now);
+                    masterGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+                    carrier.connect(masterGain);
+                    masterGain.connect(audioCtx.destination);
+
+                    modulator.start(now);
+                    carrier.start(now);
+                    modulator.stop(now + 0.12);
+                    carrier.stop(now + 0.12);
+                }
+            } catch(e) {}
+        }
+
+        // Web Audio Synthesizer: Metallic Jingle Tambourine Sound
+        function playTambourineSound() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const now = audioCtx.currentTime;
+
+                const bufferSize = audioCtx.sampleRate * 0.12;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'highpass';
+                filter.frequency.setValueAtTime(5500 + Math.random() * 1000, now);
+
+                const noiseGain = audioCtx.createGain();
+                noiseGain.gain.setValueAtTime(0.3, now);
+                noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.11);
+
+                noise.connect(filter);
+                filter.connect(noiseGain);
+                noiseGain.connect(audioCtx.destination);
+
+                noise.start(now);
+
+                [7200, 9400, 11500].forEach(freq => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq + Math.random() * 300, now);
+
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.09);
+                });
+
+                showMessage('🎵 짝짝짝!', ' 먼작귀 밴드의 신나는 템버린 연주! 🎉');
+            } catch(e) {}
+        }
+
+        // Modal Helpers
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
